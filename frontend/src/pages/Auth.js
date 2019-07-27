@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
+import AuthContext from '../context/auth-context'
+
 import './Auth.css'
 class AuthPage extends Component {
   state = {
     isLogin: true
   }
+
+  static contextType = AuthContext
   constructor(props) {
 
     super(props);
@@ -14,7 +18,7 @@ class AuthPage extends Component {
   switchModeHandler = () => {
     console.log('??')
     this.setState(prevState => {
-      
+
       return { isLogin: !prevState.isLogin };
     })
   }
@@ -38,7 +42,7 @@ class AuthPage extends Component {
         }
       `
     };
-    if (this.state.isLogin) {
+    if (!this.state.isLogin) {
       requestBody = {
         query: `
           mutation{
@@ -52,17 +56,26 @@ class AuthPage extends Component {
     }
 
     try {
-      const result = await fetch('http://localhost:8000/graphql', {
+      const res = await fetch('http://localhost:8000/graphql', {
         method: 'POST',
         body: JSON.stringify(requestBody),
         headers: {
           'Content-Type': 'application/json',
         }
       })
-      if (result.status !== 200 && result.status !== 201) {
+      const result = await res.json()
+
+      if (res.status !== 200 && res.status !== 201) {
         throw new Error('Failed!')
       }
-      console.log(await result.json())
+       console.log(result)
+      if ( result.data.login.token) {
+       
+        this.context.login(
+          result.data.login.token,
+          result.data.login.userId,
+          result.data.login.tokenExpiration)
+      }
 
     } catch (e) {
       console.log(e)
@@ -81,7 +94,7 @@ class AuthPage extends Component {
         <input type="password" id="password" ref={this.passwordEl}></input>
       </div>
       <div className="form-actions">
-        <button type="button"  onClick={this.switchModeHandler} > Switch to {this.state.isLogin ? 'Sign Up' : 'Sign In'}</button>
+        <button type="button" onClick={this.switchModeHandler} > Switch to {this.state.isLogin ? 'Sign Up' : 'Sign In'}</button>
         <button type="submit" >Submit</button>
       </div>
     </form>
