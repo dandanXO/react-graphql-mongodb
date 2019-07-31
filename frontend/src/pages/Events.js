@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Modal from '../components/Modal/Modal'
 import Backdrop from '../components/Backdrop/Backdrop'
+import EventList from '../components/Events/EventLis/EventList'
 
 import AuthContext from '../context/auth-context'
 
@@ -8,7 +9,8 @@ import './Events.css'
 class Events extends Component {
   state = {
     createing: false,
-    events:[]
+    events: [],
+    isLoading:false,
   }
   static contextType = AuthContext;
 
@@ -52,10 +54,6 @@ class Events extends Component {
             description
             price
             date
-            creator {
-              _id
-              email
-            }
           }
         }
       `
@@ -78,7 +76,20 @@ class Events extends Component {
         throw new Error('Failed!')
 
       }
-      this.fetchEvent()
+      this.setState(prevState => {
+        const updateEvents = [...prevState.events]
+        updateEvents.push({
+          _id: this.context.userId,
+          title: result.data.createEvent.title,
+          description: result.data.createEvent.description,
+          price: result.data.createEvent.price,
+          date: result.data.createEvent.date,
+          creator: {
+            _id: this.context.userId,
+          }
+        })
+        return {events: updateEvents}
+      })
 
     } catch (e) {
       console.log(e)
@@ -124,18 +135,13 @@ class Events extends Component {
 
       }
       const events = result.data.events;
-      this.setState( { events: events })
+      this.setState({ events: events })
 
     } catch (e) {
       console.log(e)
     }
   }
   render() {
-    const eventList = this.state.events.map(event=>{
-      return (
-        <li key={event._id} className="events__list-item">{event.title}</li>
-      )
-    })
     return (
       <React.Fragment>
         {this.state.createing && <Backdrop></Backdrop>}
@@ -168,9 +174,10 @@ class Events extends Component {
           <p>Share your own Evets!</p>
           <button className="btn" onClick={this.startCreateEventHandler}>Cruuent Event</button>
         </div>}
-        <ul className="events__list">
-          {eventList}
-        </ul>
+        <EventList
+          events={this.state.events}
+          authUserId={this.context.userId}
+        ></EventList>
       </React.Fragment >
     )
   }
