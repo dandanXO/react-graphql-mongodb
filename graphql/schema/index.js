@@ -50,7 +50,6 @@ type RootMutation {
   createEvent(eventInput: EnentInput): Event
   createUser(userInput: UserInput): User
   bookEvent(eventId: ID!): Booking!
-  bookBooking(bookingId:ID!): Event!
   cancelBooking(bookingId: ID!): Event!
 }
 schema {
