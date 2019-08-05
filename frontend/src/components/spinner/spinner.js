@@ -1,10 +1,10 @@
 import React from 'react';
 import './spinner.css'
 
-const spinner = () =>{
+const spinner = props =>{
   return(
     <div className="spinner">
-       <div className="lds-hourglass"></div>
+       <div className="lds-hourglass" />
     </div>
   )
 }

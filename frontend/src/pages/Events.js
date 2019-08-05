@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Modal from '../components/Modal/Modal'
 import Backdrop from '../components/Backdrop/Backdrop'
 import EventList from '../components/Events/EventLis/EventList'
-import Spinner from '../components/spinner/spinner'
+import Spinner from '../components/Spinner/Spinner'
 
 import AuthContext from '../context/auth-context'
 
