@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import AuthContext from '../context/auth-context'
 
 import BookingList from '../components/Bookings/BookingList/BookingList'
-import Spinner from '../components/spinner/spinner'
+import Spinner from '../components/Spinner/Spinner'
 class Booking extends Component {
   state = {
     isLoading: false,
