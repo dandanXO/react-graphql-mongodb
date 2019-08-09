@@ -16,7 +16,6 @@ class AuthPage extends Component {
 
   }
   switchModeHandler = () => {
-    console.log('??')
     this.setState(prevState => {
 
       return { isLogin: !prevState.isLogin };
@@ -33,25 +32,31 @@ class AuthPage extends Component {
     }
     let requestBody = {
       query: `
-        query {
-          login(email: "${email}", password: "${password}" ){
+        query login($email: String!, $password:String!){
+          login(email: $email, password: $password){
             userId
             token
             tokenExpiration
           }
         }
-      `
+      `,
+      variables: {
+        email, password
+      }
     };
     if (!this.state.isLogin) {
       requestBody = {
         query: `
-          mutation{
-            createUser(userInput: {email: "${email}", password: "${password}" }){
+          mutation createUser($email: String!, $password: String!){
+            createUser(userInput: {email: $email, password: $password }){
               _id
               email
             }
           }
-        `
+        `,
+        variables: {
+          email, password
+        }
       };
     }
 
@@ -68,9 +73,9 @@ class AuthPage extends Component {
       if (res.status !== 200 && res.status !== 201) {
         throw new Error('Failed!')
       }
-       console.log(result)
-      if ( result.data.login.token) {
-       
+      console.log(result)
+      if (result.data.login.token) {
+
         this.context.login(
           result.data.login.token,
           result.data.login.userId,
