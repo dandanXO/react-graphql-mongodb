@@ -59,13 +59,16 @@ class Booking extends Component {
   deleteBookingHandler = async bookingId => {
     let requestBody = {
       query: `
-        mutation{
-          cancelBooking(bookingId: "${bookingId}") {
+        mutation cancelBooking( $id: ID!) {
+          cancelBooking(bookingId: $id) {
             _id
             title
           }
         }
-      `
+      `,
+      variables:{
+        id: bookingId
+      }
     };
 
     try {
