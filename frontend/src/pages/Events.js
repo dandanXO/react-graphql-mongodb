@@ -191,7 +191,7 @@ class Events extends Component {
         console.log(result)
         throw new Error('Failed!')
       }
-      console.log(result)
+      //console.log(result)
       this.setState({ selectedEvent: null })
 
     } catch (e) {
